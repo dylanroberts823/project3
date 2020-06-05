@@ -7,22 +7,19 @@ class Categories(models.Model):
     def __str__(self):
         return f"{self.category}"
 
+class Extras(models.Model):
+    extra = models.CharField(max_length=64)
+
+    def __str__(self):
+        return f"{self.extra}"
+
 class Items(models.Model):
     category = models.ForeignKey(Categories, on_delete=models.CASCADE)
     item = models.CharField(max_length=64)
     small_price = models.FloatField(max_length=10, blank=True)
     large_price = models.FloatField(max_length=10, blank=True)
     set_price = models.FloatField(max_length=10, blank=True)
-    extras = models.ManytoManyField(Extras)
+    extras = models.ManyToManyField(Extras)
 
     def __str__(self):
         return f"{self.item}"
-
-
-class Extras(models.Model):
-    category = models.ForeignKey(Categories, on_delete=models.CASCADE, blank=True)
-    item = models.ForeignKey(Items, on_delete=models.CASCADE, blank=True)
-    extra = models.ManytoManyField(max_length=64)
-
-    def __str__(self):
-        return f"{self.extra}"
