@@ -19,7 +19,7 @@ class Items(models.Model):
 
 class Category_Toppings(models.Model):
     topping = models.CharField(max_length=64)
-    category = models.ForeignKey(Categories, on_delete=models.CASCADE, blank=True, null=True)
+    category = models.ForeignKey(Categories, on_delete=models.CASCADE)
 
     def __str__(self):
         return f"{self.topping}"
