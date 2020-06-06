@@ -1,9 +1,10 @@
-{% extends "users/base.html" %}
-{% block body % }
+{% extends "orders/base.html" %}
+
+{% block body %}
   <h1>Menu</h1>
     {% for category in Categories %}
-        <h2>  {{ category }} </h2>
-        <ul>
+      <h2>  {{ category }} </h2>
+      <ul>
         {% for item in Items %}
           {% if item.category == category %}
             <li>{{ item }}</li>
