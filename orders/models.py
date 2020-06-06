@@ -17,10 +17,16 @@ class Items(models.Model):
     def __str__(self):
         return f"{self.item}"
 
-class Extras(models.Model):
-    extra = models.CharField(max_length=64)
+class Category_Toppings(models.Model):
+    topping = models.CharField(max_length=64)
     category = models.ForeignKey(Categories, on_delete=models.CASCADE, blank=True, null=True)
+
+    def __str__(self):
+        return f"{self.topping}"
+
+class Item_Toppings(models.Model):
+    topping = models.CharField(max_length=64)
     item = models.ForeignKey(Items, on_delete=models.CASCADE, blank=True, null=True)
 
     def __str__(self):
-        return f"{self.extra}"
+        return f"{self.topping}"
