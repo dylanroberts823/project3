@@ -1,18 +1,14 @@
-<html>
-      <head>
-          <title>Pinnochio's Pizza & Subs</title>
-      </head>
-      <body>
-          <h1>Menu</h1>
-            {% for category in Categories %}
-                <h2>  {{ category }} </h2>
-                <ul>
-                {% for item in Items %}
-                  {% if item.category == category %}
-                    <li>{{ item }}</li>
-                  {% endif %}
-                {% endfor %}
-              </ul>
-            {% endfor %}
-      </body>
-  </html>
+{% extends "users/base.html" %}
+{% block body % }
+  <h1>Menu</h1>
+    {% for category in Categories %}
+        <h2>  {{ category }} </h2>
+        <ul>
+        {% for item in Items %}
+          {% if item.category == category %}
+            <li>{{ item }}</li>
+          {% endif %}
+        {% endfor %}
+      </ul>
+    {% endfor %}
+{% endblock %}
