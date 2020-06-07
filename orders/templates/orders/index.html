@@ -2,15 +2,15 @@
 
 {% block body %}
   <h1>Menu</h1>
-    {% for category in Categories %}
+    {% for category in Category %}
       <h2>  {{ category }} </h2>
       <ul>
-        {% for item in Items %}
+        {% for item in Item %}
           {% if item.category == category %}
             <li>
               {{ item }}
               <label for="quantity">Quantity:</label>
-              <input type="number" id="{{item}}" min="0"> 
+              <input type="number" id="{{item}}" min="0">
             </li>
           {% endif %}
         {% endfor %}

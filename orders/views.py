@@ -2,7 +2,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 
-from .models import Categories, Items, Category_Toppings, Item_Toppings
+from .models import Category, Item, Category_Topping, Item_Topping
 
 # Create your views here.
 def index(request):
@@ -10,7 +10,7 @@ def index(request):
         return render(request, "users/login.html", {"message": None})
     context = {
         "user": request.user,
-        "Categories": Categories.objects.all(),
-        "Items": Items.objects.all()
+        "Category": Category.objects.all(),
+        "Item": Item.objects.all()
     }
     return render(request, "orders/index.html", context)

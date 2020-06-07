@@ -1,9 +1,9 @@
 from django.contrib import admin
 
-from .models import Categories, Items, Category_Toppings, Item_Toppings
+from .models import Category, Item, Category_Topping, Item_Topping
 
 # Register your models here.
-admin.site.register(Categories)
-admin.site.register(Items)
-admin.site.register(Category_Toppings)
-admin.site.register(Item_Toppings)
+admin.site.register(Category)
+admin.site.register(Item)
+admin.site.register(Category_Topping)
+admin.site.register(Item_Topping)
