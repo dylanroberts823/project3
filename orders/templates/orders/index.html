@@ -7,7 +7,11 @@
       <ul>
         {% for item in Items %}
           {% if item.category == category %}
-            <li>{{ item }}</li>
+            <li>
+              {{ item }}
+              <label for="quantity">Quantity:</label>
+              <input type="number" id="{{item}}" min="0"> 
+            </li>
           {% endif %}
         {% endfor %}
       </ul>
