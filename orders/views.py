@@ -2,7 +2,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 
-from .models import Category, Item, Category_Topping, Item_Topping
+from .models import Category, Item, Category_Topping, Item_Topping, Order
 
 # Create your views here.
 def index(request):

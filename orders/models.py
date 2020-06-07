@@ -1,4 +1,6 @@
 from django.db import models
+from django.conf import settings
+
 
 # Create your models here.
 class Category(models.Model):
@@ -30,3 +32,24 @@ class Item_Topping(models.Model):
 
     def __str__(self):
         return f"{self.topping}"
+
+class Order(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,)
+    date = models.DateField(auto_now=True)
+    order = models.CharField(max_length=512,)
+
+    PLACED = 'PL'
+    PREPARING = 'PR'
+    READY = 'RE'
+    DELIVERED = 'DE'
+    CANCELLED_BY_CUSTOMER = 'CC'
+    CANCELLED_BY_RESTAURANT = 'CR'
+    STATUS_CHOICES = [
+        (PLACED, 'Placed'),
+        (PREPARING, 'Preparing'),
+        (READY, 'Ready'),
+        (DELIVERED, 'Delivered'),
+        (CANCELLED_BY_CUSTOMER, 'Cancelled by customer'),
+        (CANCELLED_BY_RESTAURANT, 'Cancelled by restaurant')
+    ]
+    status = models.CharField(max_length=2, choices=STATUS_CHOICES, default=PLACED,)
