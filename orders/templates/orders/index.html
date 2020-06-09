@@ -10,10 +10,18 @@
             <li>
               {{ item }}
               <label for="quantity">Quantity:</label>
-              <input type="number" id="{{item}}" min="0">
+              <input type="number" data="{'item': {{ item }}, 'category': {{ category }},}" min="0"></input>
             </li>
           {% endif %}
         {% endfor %}
       </ul>
     {% endfor %}
+    <button id="shopping_cart" class="btn btn-primary" >Select Toppings</button>
+    <script>
+      //If there isn't a shopping cart already, create one
+      if(!localStorage.getItem('shopping_cart')){
+        var shopping_cart = {};
+        localStorage.setItem('shopping_cart', shopping_cart);
+      };
+    </script>
 {% endblock %}
