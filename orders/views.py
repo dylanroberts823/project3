@@ -5,7 +5,7 @@ from django.shortcuts import render
 from .models import Category, Item, Category_Topping, Item_Topping, Order
 
 # Create your views here.
-def index(request):
+def menu(request):
     if not request.user.is_authenticated:
         return render(request, "users/login.html", {"message": None})
     context = {
@@ -13,4 +13,4 @@ def index(request):
         "Category": Category.objects.all(),
         "Item": Item.objects.all()
     }
-    return render(request, "orders/index.html", context)
+    return render(request, "orders/menu.html", context)

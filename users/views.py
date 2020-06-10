@@ -5,6 +5,8 @@ from django.urls import reverse
 
 from .forms import RegistrationForm
 
+from orders.models import Category, Item
+
 
 # Create your views here.
 #Taken directly from source code 7
@@ -12,9 +14,11 @@ def index(request):
     if not request.user.is_authenticated:
         return render(request, "users/login.html", {"message": None})
     context = {
-        "user": request.user
+        "user": request.user,
+        "Category": Category.objects.all(),
+        "Item": Item.objects.all()
     }
-    return render(request, "users/user.html", context)
+    return render(request, "orders/menu.html", context)
 
 def login_view(request):
     if request.method == 'POST':
