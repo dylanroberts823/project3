@@ -32,26 +32,4 @@ document.addEventListener('DOMContentLoaded', () => {
       else{cart_button.disabled = false;}
     });
   });
-
-  //When button is pressed, reset the shopping_cart value
-  cart_button.onclick = (() => {
-    //Create variable to store current cart
-    var current_cart = [];
-
-    //Populate that variable
-    document.querySelectorAll('input').forEach(input => {
-      //Select for those items that have a quantity
-      if (input.value != "" || input.value != "") {
-        //Add their information to the current_cart
-        var item = {
-          "Category": input.dataset.category,
-          "Item": input.dataset.item,
-          "Quantity": parseInt(input.value),
-        };
-        current_cart.push(item);
-      }
-    });
-    //Store the variable
-    localStorage.setItem('shopping_cart', current_cart);
-  });
 });

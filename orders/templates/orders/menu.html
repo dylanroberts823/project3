@@ -16,12 +16,39 @@
         {% endfor %}
       </ul>
     {% endfor %}
-    <button id="shopping_cart" class="btn btn-primary" >Select Toppings</button>
+    <button id="shopping_cart" class="btn btn-primary" href="{% url 'select_toppings' %}">Select Toppings</button>
     <script>
       //If there isn't a shopping cart already, create one
       if(!localStorage.getItem('shopping_cart')){
         var shopping_cart = [];
         localStorage.setItem('shopping_cart', shopping_cart);
       };
+    </script>
+    <script>
+    //Dictates what to do on click
+    document.addEventListener('DOMContentLoaded', () => {
+      const cart_button = document.getElementById('shopping_cart');
+      cart_button.onclick = (() => {
+        //Create variable to store current cart
+        var current_cart = [];
+
+        //Populate that variable
+        document.querySelectorAll('input').forEach(input => {
+          //Select for those items that have a quantity
+          if (input.value != "" || input.value != "") {
+            //Add their information to the current_cart
+            var item = {
+              "Category": input.dataset.category,
+              "Item": input.dataset.item,
+              "Quantity": parseInt(input.value),
+            };
+            current_cart.push(item);
+          }
+        });
+        //Store the variable
+        localStorage.setItem('shopping_cart', current_cart);
+        window.location.href="{% url 'select_toppings' %}";
+      });
+    });
     </script>
 {% endblock %}
