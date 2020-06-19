@@ -2,30 +2,26 @@
 
 {% block body %}
   <h1>Menu</h1>
-    {% for category in Category %}
-      <h2>  {{ category }} </h2>
-      <ul>
-        {% for item in Item %}
-          {% if item.category == category %}
-            <li>
-              {{ item }}
-              <label for="quantity">Quantity:</label>
-              <input type="number" data-item="{{ item }}" data-category="{{ category }}" min="0"></input>
-            </li>
-          {% endif %}
-        {% endfor %}
-      </ul>
-    {% endfor %}
-    <button id="shopping_cart" class="btn btn-primary" href="{% url 'select_toppings' %}">Select Toppings</button>
-    <script>
-      //If there isn't a shopping cart already, create one
-      if(!localStorage.getItem('shopping_cart')){
-        var shopping_cart = [];
-        localStorage.setItem('shopping_cart', shopping_cart);
-      };
-    </script>
-    <script>
-    //Dictates what to do on click
+  {% for category in Category %}
+    <h2>  {{ category }} </h2>
+      {% for item in Item %}
+        {% if item.category == category %}
+          <div class = card>
+            <div class = "card-body"
+              <form action="{% url 'orders:modify_cart' %}" method="POST">
+                {% csrf_token %}
+                {{ item }}
+                <input id="shopping_cart" class="float-right btn btn-primary" type="submit" value="Add"></input>
+                <input class ="float-right" type="number" data-item="{{ item }}" data-category="{{ category }}" min="0" name="quantity">Quantity: </input>
+              </form>
+            </div>
+          </div>
+        {% endif %}
+      {% endfor %}
+  {% endfor %}
+
+    <!-- <script>
+    //Create or modify shopping cart on click
     document.addEventListener('DOMContentLoaded', () => {
       const cart_button = document.getElementById('shopping_cart');
       cart_button.onclick = (() => {
@@ -46,9 +42,9 @@
           }
         });
         //Store the variable
-        localStorage.setItem('shopping_cart', current_cart);
+        localStorage.setItem('shopping_cart', JSON.stringify(current_cart));
         window.location.href="{% url 'select_toppings' %}";
       });
     });
-    </script>
+    </script> -->
 {% endblock %}

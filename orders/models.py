@@ -21,17 +21,15 @@ class Item(models.Model):
 
 class Category_Topping(models.Model):
     topping = models.CharField(max_length=64)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, related_name='toppings', on_delete=models.CASCADE)
 
     def __str__(self):
         return f"{self.topping}"
 
 class Item_Topping(models.Model):
     topping = models.CharField(max_length=64)
-    item = models.ForeignKey(Item, on_delete=models.CASCADE, blank=True, null=True)
+    item = models.ForeignKey(Item, related_name = 'toppings', on_delete=models.CASCADE, blank=True, null=True)
 
-    def __str__(self):
-        return f"{self.topping}"
 
 class Order(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,)
