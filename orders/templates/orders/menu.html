@@ -7,44 +7,9 @@
       {% for item in Item %}
         {% if item.category == category %}
           <div class = card>
-            <div class = "card-body"
-              <form action="{% url 'orders:modify_cart' %}" method="POST">
-                {% csrf_token %}
-                {{ item }}
-                <input id="shopping_cart" class="float-right btn btn-primary" type="submit" value="Add"></input>
-                <input class ="float-right" type="number" data-item="{{ item }}" data-category="{{ category }}" min="0" name="quantity">Quantity: </input>
-              </form>
-            </div>
+            <a href="{% url 'select_toppings' item.id %}">{{ item }}</a>
           </div>
         {% endif %}
       {% endfor %}
   {% endfor %}
-
-    <!-- <script>
-    //Create or modify shopping cart on click
-    document.addEventListener('DOMContentLoaded', () => {
-      const cart_button = document.getElementById('shopping_cart');
-      cart_button.onclick = (() => {
-        //Create variable to store current cart
-        var current_cart = [];
-
-        //Populate that variable
-        document.querySelectorAll('input').forEach(input => {
-          //Select for those items that have a quantity
-          if (input.value != "" || input.value != "") {
-            //Add their information to the current_cart
-            var item = {
-              "Category": input.dataset.category,
-              "Item": input.dataset.item,
-              "Quantity": parseInt(input.value),
-            };
-            current_cart.push(item);
-          }
-        });
-        //Store the variable
-        localStorage.setItem('shopping_cart', JSON.stringify(current_cart));
-        window.location.href="{% url 'select_toppings' %}";
-      });
-    });
-    </script> -->
 {% endblock %}

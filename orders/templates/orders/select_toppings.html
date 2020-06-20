@@ -1,5 +1,26 @@
 {% extends "orders/base.html" %}
 {% block body %}
 <h1>Select Toppings</h1>
-
+  <h2>{{item}}</h2>
+  <form action="{% url 'add_to_cart' %}" method="post">
+    {% csrf_token %}
+    <div class="form-group">
+      {%for topping in item_toppings%}
+        <div class="form-check form-check-inline">
+          <input type="checkbox" class="form-check-input" id="item_{{topping}}">
+          <label class="form-check-label" for="item_{{topping}}">{{topping}}</label>
+        </div>
+      {% endfor %}
+      {%for topping in cat_toppings%}
+        <div class="form-check form-check-inline">
+          <input type="checkbox" class="form-check-input" id="cat_{{topping}}">
+          <label class="form-check-label" for="cat_{{topping}}">{{topping}}</label>
+        </div>
+      {% endfor %}
+      <div>
+        <input type="submit" class ="btn btn-primary" value="Add to cart"></input>
+      </div>
+    </div>
+  </form>
+  <!-- Will want to limit checks to max 3 -->
 {% endblock %}

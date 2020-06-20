@@ -25,28 +25,30 @@ def myorders(request):
     }
     return render(request, "orders/myorders.html", context)
 
-def select_toppings(request):
+def select_toppings(request, item_id):
     if not request.user.is_authenticated:
         return render(request, "users/login.html", {"message": None})
-    #Get a list of all the items submitted via the form
-    #Submit that list in context
-
+    #If method is post, add the item to the cart
+    #If method is get, display the page
+    #First, check that object exists
+    try:
+        item = Item.objects.get(pk=item_id)
+    except Item.DoesNotExist:
+        raise Http404("Item Does Not Exist")
     context = {
-        "user": request.user,
-        "Category": Category.objects.all(),
-        "Item": Item.objects.all(),
-        "Category_Topping": Category_Topping.objects.all(),
-        "Item_Topping": Item_Topping.objects.all(),
-        "Order": Order.objects.all(),
+        "item": item,
+        "item_toppings": item.toppings.all(),
+        "cat_toppings": item.category.toppings.all()
     }
     return render(request, "orders/select_toppings.html", context)
 
+
 def modify_cart(request):
-    if request.method == "POST":
-        context = {
-            # "item": request.form.get(quantity.dataset.item),
-            "quantity": request.form.get("quantity"),
-        }
-        return render(request, "orders/test.html", context)
-    else:
-        return render(request, "orders/test.html")
+    context = {
+        "item": request.POST.get('quantity-data-item'),
+        "quantity": request.POST.get('quantity')
+    }
+    return render(request, "orders/test.html", context)
+
+def add_to_cart(request, item_id)
+    user =
