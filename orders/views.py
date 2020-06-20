@@ -1,6 +1,7 @@
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
+from django.urls import reverse
 from django.core import serializers
 
 from .models import Category, Item, Category_Topping, Item_Topping, Order
@@ -50,5 +51,10 @@ def modify_cart(request):
     }
     return render(request, "orders/test.html", context)
 
-def add_to_cart(request, item_id)
-    user =
+def add_to_cart(request, item_id):
+    if request.method == 'POST':
+        toppings = request.POST.getlist('topping')
+        print(toppings)
+        return HttpResponseRedirect(reverse('menu'))
+    else:
+        return HttpResponseRedirect(reverse('myorders'))

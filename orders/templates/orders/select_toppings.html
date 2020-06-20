@@ -2,25 +2,17 @@
 {% block body %}
 <h1>Select Toppings</h1>
   <h2>{{item}}</h2>
-  <form action="{% url 'add_to_cart' %}" method="post">
+  <form action="{% url 'add_to_cart' item.id %}" method="post">
     {% csrf_token %}
-    <div class="form-group">
       {%for topping in item_toppings%}
-        <div class="form-check form-check-inline">
-          <input type="checkbox" class="form-check-input" id="item_{{topping}}">
-          <label class="form-check-label" for="item_{{topping}}">{{topping}}</label>
-        </div>
+          <input type="checkbox" name="topping" id="item_{{topping}}" value="{{topping}}">
+          <label for="item_{{topping}}">{{topping}}</label>
       {% endfor %}
       {%for topping in cat_toppings%}
-        <div class="form-check form-check-inline">
-          <input type="checkbox" class="form-check-input" id="cat_{{topping}}">
-          <label class="form-check-label" for="cat_{{topping}}">{{topping}}</label>
-        </div>
+          <input type="checkbox" name = "topping" id="cat_{{topping}}" value={{topping}}>
+          <label for="cat_{{topping}}">{{topping}}</label>
       {% endfor %}
-      <div>
-        <input type="submit" class ="btn btn-primary" value="Add to cart"></input>
-      </div>
-    </div>
+      <input type="submit" class ="btn btn-primary" value="Add to cart"></input>
   </form>
   <!-- Will want to limit checks to max 3 -->
 {% endblock %}
