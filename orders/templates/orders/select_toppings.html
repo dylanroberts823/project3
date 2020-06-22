@@ -5,11 +5,11 @@
   <form action="{% url 'add_to_cart' item.id %}" method="post">
     {% csrf_token %}
       {%for topping in item_toppings%}
-          <input type="checkbox" name="topping" id="item_{{topping}}" value="{{topping}}">
+          <input type="checkbox" name="item_topping" id="item_{{topping}}" value={{topping.id}}>
           <label for="item_{{topping}}">{{topping}}</label>
       {% endfor %}
       {%for topping in cat_toppings%}
-          <input type="checkbox" name = "topping" id="cat_{{topping}}" value={{topping}}>
+          <input type="checkbox" name = "cat_topping" id="cat_{{topping}}" value={{topping.id}}>
           <label for="cat_{{topping}}">{{topping}}</label>
       {% endfor %}
       <input type="submit" class ="btn btn-primary" value="Add to cart"></input>

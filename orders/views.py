@@ -4,7 +4,7 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.core import serializers
 
-from .models import Category, Item, Category_Topping, Item_Topping, Order
+from .models import Category, Item, Category_Topping, Item_Topping, Ticket, Order
 
 # Create your views here.
 def menu(request):
@@ -53,8 +53,12 @@ def modify_cart(request):
 
 def add_to_cart(request, item_id):
     if request.method == 'POST':
-        toppings = request.POST.getlist('topping')
-        print(toppings)
+        #Create a ticket with the item
+        ticket = Ticket.objects.create(item = Item.objects.get(pk=item_id))
+        for topping in request.POST.getlist('cat_topping'):
+            cat_topping = Category_Topping.objects.get(pk=topping)
+            ticket.cat_topping.add(cat_topping)
+        print(ticket)
         return HttpResponseRedirect(reverse('menu'))
     else:
         return HttpResponseRedirect(reverse('myorders'))
