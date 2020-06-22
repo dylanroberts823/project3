@@ -39,9 +39,7 @@ class Ticket(models.Model):
     item_topping = models.ManyToManyField(Item_Topping)
 
     def __str__(self):
-        cat_topping = ' , '.join(cat.topping for cat in self.cat_topping.all())
-        item_topping = ' , '.join(item.topping for item in self.item_topping.all())
-        return f"{self.item} with "+ cat_topping + item_topping
+        return f"{self.item}"
 
 class Order(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,)

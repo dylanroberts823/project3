@@ -2,7 +2,7 @@
 {% block body %}
 <h1>Select Toppings</h1>
   <h2>{{item}}</h2>
-  <form action="{% url 'add_to_cart' item.id %}" method="post">
+  <form action="{% url 'add_ticket' item.id %}" method="post">
     {% csrf_token %}
       {%for topping in item_toppings%}
           <input type="checkbox" name="item_topping" id="item_{{topping}}" value={{topping.id}}>
