@@ -11,26 +11,26 @@ def menu(request):
     if not request.user.is_authenticated:
         return HttpResponseRedirect("/")
 
-    cart = "Empty Cart"
-    #If their cart exists, get that information
-    if request.session.get('cart', None):
-        cart = request.session.get('cart')
-        print("Cart exists")
-        #Create a list to store the detailed list of items in the ticket
-        ticketed_cart = []
+    #Check if the cart exists from a previous session
+    cart = Order.objects.get(user = request.user, status="CA")
 
-        #Loop through the cart to populate the new list
-        for ticket in cart:
-            cart_item = Ticket.objects.get(id=ticket)
-            ticketed_cart.append(cart_item)
-        #Make the cart variable equal to ticketed_cart
-        cart = ticketed_cart
+    #If there is no cart, create one
+    if cart == None:
+        cart = Order.objects.create(user = session.user)
+
+    #Loop through the cart to populate the cart display
+    cart_display = []
+    total = 0
+    for ticket in cart.order.all():
+        cart_display.append(ticket.id)
+    cart = cart_display
 
     context = {
         "user": request.user,
         "Category": Category.objects.all(),
         "Item": Item.objects.all(),
         "Cart": cart,
+        "Total": total,
     }
     return render(request, "orders/menu.html", context)
 
@@ -81,22 +81,9 @@ def add_ticket(request, item_id):
             item_topping = Item_Topping.objects.get(pk=topping)
             ticket.item_topping.add(item_topping)
 
-        #Add the items to the cart
-        #If there is no item named cart, create an array with the ticket as the first object in the cart
-        if not request.session.get('cart', None):
-            request.session["cart"] = [ticket.id]
-            print("New cart with: ", request.session.get('cart'))
-        #Since there is a cart, add the item to the cart
-        else:
-            #Get the old cart
-            cart = request.session.get("cart")
-
-            #Modify cart to add the new ticket
-            cart.append(ticket.id)
-
-            #Replace the old cart object
-            request.session["cart"] = cart
-            print("Adding to cart, new cart: ", request.session.get("cart"))
+        #Add the items to the order
+        cart = Order.objects.get(user = request.user, status="CA")
+        cart.order.add(ticket)
 
         #Go back to the menu
         return HttpResponseRedirect(reverse('menu'))

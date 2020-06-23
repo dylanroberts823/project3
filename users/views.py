@@ -21,7 +21,11 @@ def login_view(request):
         password = request.POST["password"]
         user = authenticate(request, username=username, password=password)
         if user is not None:
+            #Login the user
             login(request, user)
+
+            #Load the user's cart
+
             return HttpResponseRedirect(reverse("index"))
         else:
             return render(request, "users/login.html", {"message": "Invalid credentials."})
@@ -29,6 +33,9 @@ def login_view(request):
         return render(request, "users/login.html")
 
 def logout_view(request):
+    #Store the cart in the orders database
+
+
     logout(request)
     return render(request, "users/login.html", {"message": "Logged out."})
 

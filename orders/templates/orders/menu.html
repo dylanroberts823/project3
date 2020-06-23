@@ -21,18 +21,27 @@
           <div class="card-body">
             <h3 class="card-title">Your Cart </h3>
             <ul class="list-group list-group-flush">
-            {% for ticket in Cart %}
-            <li class="list-group-item">{{ticket}}
-            <button type="button" class="btn btn-primary">Remove</button>
-            </li>
-            {% empty %}
-            Empty cart
-            {% endfor %}
+              {% for ticket in Cart %}
+                <li class="list-group-item">{{ticket}}
+                <button type="button" class="btn btn-primary">Remove</button>
+                </li>
+              {% empty %}
+                Empty cart
+              {% endfor %}
+              <li> Total: {{Total}} </li>
             </ul>
           </div>
-          <button type="button" class="btn btn-primary">Checkout</button>
+          <button type="button" class="btn btn-primary" id = "checkout_button">Checkout</button>
         </div>
       </div>
     </div>
   </div>
+
+  <script>
+    //Disbale the checkout button if there is nothing in the cart
+    const checkout_button = document.getElementById('checkout_button');
+    if ({{Total}} === 0) {
+      checkout_button.disabled = true;
+    };
+  </script>
 {% endblock %}

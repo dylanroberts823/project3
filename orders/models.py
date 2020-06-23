@@ -46,6 +46,7 @@ class Order(models.Model):
     date = models.DateField(auto_now=True)
     order = models.ManyToManyField(Ticket)
 
+    CARTED = 'CA'
     PLACED = 'PL'
     PREPARING = 'PR'
     READY = 'RE'
@@ -53,14 +54,15 @@ class Order(models.Model):
     CANCELLED_BY_CUSTOMER = 'CC'
     CANCELLED_BY_RESTAURANT = 'CR'
     STATUS_CHOICES = [
+        (CARTED, 'Carted'),
         (PLACED, 'Placed'),
         (PREPARING, 'Preparing'),
         (READY, 'Ready'),
         (DELIVERED, 'Delivered'),
         (CANCELLED_BY_CUSTOMER, 'Cancelled by customer'),
-        (CANCELLED_BY_RESTAURANT, 'Cancelled by restaurant')
+        (CANCELLED_BY_RESTAURANT, 'Cancelled by restaurant'),
     ]
-    status = models.CharField(max_length=2, choices=STATUS_CHOICES, default=PLACED,)
+    status = models.CharField(max_length=2, choices=STATUS_CHOICES, default=CARTED,)
 
     def __str__(self):
-        return f"{self.user} ordered {self.order} on {self.date}"
+        return f"{self.user}'s order on {self.date}"
