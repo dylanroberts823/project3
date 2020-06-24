@@ -1,0 +1,14 @@
+{% extends "orders/base.html" %}
+{% block body %}
+<h1>Select Size</h1>
+  <h2>{{Item}}</h2>
+  <form action="{% url 'select_size' item_id %}" method="post">
+    {% csrf_token %}
+      {% for size in Sizes %}
+        <input type="radio" name="size" id="{{size}}" value="{{size.id}}">{{size}}</input>
+        <br>
+      {% endfor %}
+      <input type="submit" class ="btn btn-primary" value="Add to cart"></input>
+  </form>
+  <!-- Will want to limit checks to max 3 -->
+{% endblock %}

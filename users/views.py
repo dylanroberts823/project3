@@ -24,8 +24,6 @@ def login_view(request):
             #Login the user
             login(request, user)
 
-            #Load the user's cart
-
             return HttpResponseRedirect(reverse("index"))
         else:
             return render(request, "users/login.html", {"message": "Invalid credentials."})

@@ -1,9 +1,13 @@
 {% extends "orders/base.html" %}
 {% block body %}
 <h1>Select Toppings</h1>
-  <h2>{{item}}</h2>
-  <form action="{% url 'add_ticket' item.id %}" method="post">
+  <form action="{% url 'select_toppings' item.id %}" method="post">
     {% csrf_token %}
+      <h2> {{item_price}} </h2>
+      {% for size in Sizes %}
+        <input type="radio" name="size" id="size_{{size.size}}" value={{size.size}}>{{size.size}}</input>
+      {% endfor %}
+      <h3> Toppings </h3>
       {%for topping in item_toppings%}
           <input type="checkbox" name="item_topping" id="item_{{topping}}" value={{topping.id}}>
           <label for="item_{{topping}}">{{topping}}</label>

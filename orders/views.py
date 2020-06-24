@@ -1,10 +1,10 @@
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.core import serializers
 
-from .models import Category, Item, Category_Topping, Item_Topping, Ticket, Order
+from .models import Category, Item, Category_Topping, Item_Topping, Item_Price, Ticket, Order
 
 # Create your views here.
 def menu(request):
@@ -22,7 +22,12 @@ def menu(request):
     cart_display = []
     total = 0
     for ticket in cart.order.all():
-        cart_display.append(ticket.id)
+        #Add the ticket to the display
+        cart_display.append(ticket)
+
+        #Add the price for each item
+        total += ticket.item_price.price
+
     cart = cart_display
 
     context = {
@@ -43,22 +48,6 @@ def myorders(request):
     }
     return render(request, "orders/myorders.html", context)
 
-def select_toppings(request, item_id):
-    if not request.user.is_authenticated:
-        return render(request, "users/login.html", {"message": None})
-    #If method is post, add the item to the cart
-    #If method is get, display the page
-    #First, check that object exists
-    try:
-        item = Item.objects.get(pk=item_id)
-    except Item.DoesNotExist:
-        raise Http404("Item Does Not Exist")
-    context = {
-        "item": item,
-        "item_toppings": item.toppings.all(),
-        "cat_toppings": item.category.toppings.all()
-    }
-    return render(request, "orders/select_toppings.html", context)
 
 
 def modify_cart(request):
@@ -68,26 +57,72 @@ def modify_cart(request):
     }
     return render(request, "orders/test.html", context)
 
-def add_ticket(request, item_id):
+def select_size(request, item_id):
     if request.method == 'POST':
-        #Create a ticket with the item
-        ticket = Ticket.objects.create(item = Item.objects.get(pk=item_id))
+        print("Got to post")
+        price_id = request.POST.get("size")
+
+        #Go to select toppings
+        return redirect('select_toppings', item_id = item_id, price_id = price_id)
+
+    #Since it's not a post request, open select size
+    else:
+        item = Item.objects.get(pk = item_id)
+        context = {
+            "Item": item,
+            "Sizes": item.price.all(),
+            "item_id": item_id
+        }
+        return render(request, "orders/select_size.html", context)
+
+def select_toppings(request, item_id, price_id):
+    if request.method == 'POST':
 
         #Add all of the toppings for that item
-        for topping in request.POST.getlist('cat_topping'):
-            cat_topping = Category_Topping.objects.get(pk=topping)
-            ticket.cat_topping.add(cat_topping)
-        for topping in request.POST.getlist('item_topping'):
-            item_topping = Item_Topping.objects.get(pk=topping)
-            ticket.item_topping.add(item_topping)
+        cat_topping_array = request.POST.getlist('cat_topping')
+        item_topping_array = request.POST.getlist('item_topping')
 
-        #Add the items to the order
-        cart = Order.objects.get(user = request.user, status="CA")
-        cart.order.add(ticket)
+        return add_to_cart(request, item_id, price_id, cat_topping_array, item_topping_array)
 
-        #Go back to the menu
-        return HttpResponseRedirect(reverse('menu'))
 
     #Since it's not a post request, go back to the menu
     else:
-        return HttpResponseRedirect(reverse('menu'))
+        if not request.user.is_authenticated:
+            return render(request, "users/login.html", {"message": None})
+        #If method is post, add the item to the cart
+        #If method is get, display the page
+        #First, check that object exists
+        try:
+            item = Item.objects.get(pk=item_id)
+        except Item.DoesNotExist:
+            raise Http404("Item Does Not Exist")
+            #Check that the price exists
+        try:
+            item_price = Item_Price.objects.get(pk=price_id)
+        except Item.DoesNotExist:
+            raise Http404("Item Does Not Exist")
+
+        if item_price.topping_count == 0:
+            return add_to_cart(request, item_id, price_id, [], [])
+        context = {
+            "item": item,
+            "item_toppings": item.toppings.all(),
+            "cat_toppings": item.category.toppings.all(),
+            "item_price": item_price,
+        }
+        return render(request, "orders/select_toppings.html", context)
+
+def add_to_cart(request, item_id, price_id, cat_topping, item_topping):
+    #Create a ticket for that item
+    ticket = Ticket.objects.create(item = Item.objects.get(pk=item_id), item_price = Item_Price.objects.get(pk = price_id))
+    for topping in cat_topping:
+        ticket.cat_topping.add(topping)
+    for topping in item_topping:
+        ticket.item_topping.add(item_topping)
+
+    #Add the item to the order
+    cart = Order.objects.get(user = request.user, status="CA")
+    cart.order.add(ticket)
+
+    #Go back to the menu
+    return HttpResponseRedirect(reverse('menu'))

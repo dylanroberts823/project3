@@ -4,25 +4,31 @@
   <h1>Menu</h1>
   <div class="container">
     <div class="row">
-      <div class="col-9">
+      <div class="col-lg">
       {% for category in Category %}
         <h2>  {{ category }} </h2>
           {% for item in Item %}
             {% if item.category == category %}
               <div class = card>
-                <a href="{% url 'select_toppings' item.id %}">{{ item }}</a>
+                <a href="{% url 'select_size' item.id %}">{{ item }}</a>
               </div>
             {% endif %}
           {% endfor %}
       {% endfor %}
       </div>
-      <div class="col-3">
+      <div class="col-sm">
         <div class="card">
           <div class="card-body">
             <h3 class="card-title">Your Cart </h3>
             <ul class="list-group list-group-flush">
               {% for ticket in Cart %}
                 <li class="list-group-item">{{ticket}}
+                  {% for cat_topping in ticket.cat_topping.all %}
+                    <h6 class="card-subtitle mb-2 text-muted">{{cat_topping}}</h6>
+                  {% endfor %}
+                  {% for item_topping in ticket.item_topping.all %}
+                    <h6 class="card-subtitle mb-2 text-muted">{{item_topping}}</h6>
+                  {% endfor %}
                 <button type="button" class="btn btn-primary">Remove</button>
                 </li>
               {% empty %}
