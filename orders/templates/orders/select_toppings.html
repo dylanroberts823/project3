@@ -1,7 +1,7 @@
 {% extends "orders/base.html" %}
 {% block body %}
 <h1>Select Toppings</h1>
-  <form action="{% url 'select_toppings' item.id %}" method="post">
+  <form action="{% url 'select_toppings' item.id item_price.id %}" method="post">
     {% csrf_token %}
       <h2> {{item_price}} </h2>
       {% for size in Sizes %}
@@ -18,5 +18,29 @@
       {% endfor %}
       <input type="submit" class ="btn btn-primary" value="Add to cart"></input>
   </form>
-  <!-- Will want to limit checks to max 3 -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      var check_count = 0;
+      document.querySelectorAll('input[type=checkbox]').forEach(checkbox => {
+        checkbox.onclick = () => {
+          if (checkbox.checked == true) {
+            check_count++;
+          }
+          else {
+            check_count--;
+          }
+          document.querySelectorAll('input[type=checkbox]').forEach(checkbox => {
+            if (check_count == {{item_price.topping_count}}) {
+              if (checkbox.checked != true) {
+                checkbox.disabled = true;
+              }
+            }
+            else {
+              checkbox.disabled = false;
+            }
+        });
+      };
+    });
+  });
+  </script>
 {% endblock %}
