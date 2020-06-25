@@ -3,18 +3,18 @@
 <h1>Select Toppings</h1>
   <form action="{% url 'select_toppings' item.id item_price.id %}" method="post">
     {% csrf_token %}
-      <h2> {{item_price}} </h2>
+      <h2> {{item_price.item}}, {{item_price.size}} </h2>
       {% for size in Sizes %}
         <input type="radio" name="size" id="size_{{size.size}}" value={{size.size}}>{{size.size}}</input>
       {% endfor %}
       <h3> Toppings </h3>
       {%for topping in item_toppings%}
           <input type="checkbox" name="item_topping" id="item_{{topping}}" value={{topping.id}}>
-          <label for="item_{{topping}}">{{topping}}</label>
+          <label for="item_{{topping}}">{{topping.topping}}, {{topping.price}}</label>
       {% endfor %}
       {%for topping in cat_toppings%}
           <input type="checkbox" name = "cat_topping" id="cat_{{topping}}" value={{topping.id}}>
-          <label for="cat_{{topping}}">{{topping}}</label>
+          <label for="cat_{{topping}}">{{topping.topping}}, {{topping.price}}</label>
       {% endfor %}
       <input type="submit" class ="btn btn-primary" value="Add to cart"></input>
   </form>

@@ -12,11 +12,11 @@ def menu(request):
         return HttpResponseRedirect("/")
 
     #Check if the cart exists from a previous session
-    cart = Order.objects.get(user = request.user, status="CA")
-
-    #If there is no cart, create one
-    if cart == None:
-        cart = Order.objects.create(user = session.user)
+    if(Order.objects.filter(user = request.user, status="CA").count() == 0):
+        cart = Order.objects.create(user = request.user)
+    #Since the cart does not exist, create one
+    else:
+         cart = Order.objects.get(user = request.user, status="CA")
 
     #Loop through the cart to populate the cart display
     cart_display = []
@@ -27,6 +27,10 @@ def menu(request):
 
         #Add the price for each item
         total += ticket.item_price.price
+        for topping in ticket.cat_topping.all():
+            total += topping.price
+        for topping in ticket.item_topping.all():
+            total += topping.price
 
     cart = cart_display
 
@@ -47,15 +51,6 @@ def myorders(request):
         "Order": Item_Topping.objects.all
     }
     return render(request, "orders/myorders.html", context)
-
-
-
-def modify_cart(request):
-    context = {
-        "item": request.POST.get('quantity-data-item'),
-        "quantity": request.POST.get('quantity')
-    }
-    return render(request, "orders/test.html", context)
 
 def select_size(request, item_id):
     if request.method == 'POST':
@@ -99,7 +94,7 @@ def select_toppings(request, item_id, price_id):
             #Check that the price exists
         try:
             item_price = Item_Price.objects.get(pk=price_id)
-        except Item.DoesNotExist:
+        except Item_Price.DoesNotExist:
             raise Http404("Item Does Not Exist")
 
         if item_price.topping_count == 0:
@@ -118,7 +113,7 @@ def add_to_cart(request, item_id, price_id, cat_topping, item_topping):
     for topping in cat_topping:
         ticket.cat_topping.add(topping)
     for topping in item_topping:
-        ticket.item_topping.add(item_topping)
+        ticket.item_topping.add(topping)
 
     #Add the item to the order
     cart = Order.objects.get(user = request.user, status="CA")
@@ -126,3 +121,40 @@ def add_to_cart(request, item_id, price_id, cat_topping, item_topping):
 
     #Go back to the menu
     return HttpResponseRedirect(reverse('menu'))
+
+def remove_from_cart(request, ticket_id):
+    ticket = Ticket.objects.get(pk = ticket_id)
+    cart = Order.objects.get(user = request.user, status="CA")
+    cart.order.remove(ticket)
+    return HttpResponseRedirect(reverse('menu'))
+
+def checkout(request):
+    cart = Order.objects.get(user = request.user, status="CA")
+    cart.status="PL"
+    cart.save()
+    return HttpResponseRedirect(reverse('menu'))
+
+def confirmation(request):
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect("/")
+
+    cart = Order.objects.get(user = request.user, status="CA")
+    #Loop through the cart to populate the cart display
+    cart_display = []
+    total = 0
+    for ticket in cart.order.all():
+        #Add the ticket to the display
+        cart_display.append(ticket)
+
+        #Add the price for each item
+        total += ticket.item_price.price
+
+    cart = cart_display
+    context = {
+        "user": request.user,
+        "Category": Category.objects.all(),
+        "Item": Item.objects.all(),
+        "Cart": cart,
+        "Total": total,
+    }
+    return render(request, "orders/confirmation.html", context)
