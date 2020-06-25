@@ -14,7 +14,7 @@ class Item(models.Model):
     item = models.CharField(max_length=64)
 
     def __str__(self):
-        return f"{self.item}"
+        return f"{self.item}, {self.category}"
 
 class Item_Price(models.Model):
     item = models.ForeignKey(Item, on_delete=models.CASCADE, related_name="price")
@@ -37,10 +37,11 @@ class Item_Price(models.Model):
 
 class Category_Topping(models.Model):
     topping = models.CharField(max_length=64)
-    category = models.ManyToManyField(Category, related_name='toppings')
+    category = models.ForeignKey(Category, related_name='toppings', on_delete=models.CASCADE,)
+    price = models.FloatField(max_length=10, blank=True)
 
     def __str__(self):
-        return f"{self.topping}"
+        return f"{self.topping} topping, {self.category}, {self.price}"
 
 class Item_Topping(models.Model):
     topping = models.CharField(max_length=64)
@@ -48,7 +49,7 @@ class Item_Topping(models.Model):
     price = models.FloatField(max_length=10)
 
     def __str__(self):
-        return f"{self.topping}"
+        return f"{self.topping}, {self.item}, {self.price}"
 
 class Ticket(models.Model):
     item = models.ForeignKey(Item, on_delete=models.DO_NOTHING)
@@ -83,4 +84,4 @@ class Order(models.Model):
     status = models.CharField(max_length=2, choices=STATUS_CHOICES, default=CARTED,)
 
     def __str__(self):
-        return f"{self.user}'s order on {self.date}"
+        return f"{self.status}: {self.user}'s order on {self.date}"

@@ -1,22 +1,10 @@
 {% extends "orders/base.html" %}
 
 {% block body %}
-  <h1>Menu</h1>
+  <h1>Confirmation: Is This Right?</h1>
   <div class="container">
     <div class="row">
       <div class="col-lg">
-      {% for category in Category %}
-        <h2>  {{ category }} </h2>
-          {% for item in Item %}
-            {% if item.category == category %}
-              <div class = card>
-                <a href="{% url 'select_size' item.id %}">{{ item.item }}</a>
-              </div>
-            {% endif %}
-          {% endfor %}
-      {% endfor %}
-      </div>
-      <div class="col-sm">
         <div class="card">
           <div class="card-body">
             <h3 class="card-title">Your Cart </h3>
@@ -38,21 +26,15 @@
               <li> Total: {{Total}} </li>
             </ul>
           </div>
-          <a role="button" id = "checkout_button" class="btn btn-primary" href="{% url 'confirmation' %}">Checkout</a>
+          <a role="button" id="checkout_button" class="btn btn-primary" href="{% url 'checkout' %}">Checkout</a>
         </div>
       </div>
     </div>
   </div>
-
   <script>
-    //Disbale the checkout button if there is nothing in the cart
     const checkout_button = document.getElementById('checkout_button');
-    if ({{Total}} === 0) {
-      console.log(checkout_button);
-      checkout_button.href = "{% url 'index' %}"
-      checkout_button.onclick = () => {
-        alert("Sorry, you need to add items to your cart first");
-      }
-    };
+    checkout_button.onclick = () => {
+      alert("You have successfully placed your order!");
+    }
   </script>
 {% endblock %}
